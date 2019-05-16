@@ -1,0 +1,42 @@
+@import '../../../style/vars.css';
+
+.overlayer{
+	display:inline-block;
+	position:fixed; z-index:11;
+	top:0; left:0;
+	width:100vw; height:100vh;
+	background:rgb(0,0,0); opacity:0;
+	transform: translate(-100%,0);
+	transition: opacity .3s linear;
+}
+
+.overlayer button{
+	position:absolute;
+	top:0; left:0;
+	width:100%; height:100%;
+	cursor:default;
+}
+
+.closing .overlayer{
+	opacity:0;
+	transform: translate(0,0);
+}
+
+body.modal_open{
+	position:fixed;
+	width:100vw;
+	overflow: hidden;
+}
+
+.modal_open .overlayer{
+	z-index:12;
+	opacity:.5;
+	transform: translate(0,0);
+}
+
+@media (--lg) {
+	body.modal_open{
+		position:relative;
+		overflow: hidden;
+	}
+}

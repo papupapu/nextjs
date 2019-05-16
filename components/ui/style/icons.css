@@ -1,0 +1,33 @@
+.hamburger{
+  display:block;
+	overflow: visible;
+	pointer-events: none;
+}
+
+.hamburger path{
+	fill:#979797;
+	transition:all 150ms;
+}
+
+.menu_open .hamburger path{
+  fill:#303A45;
+}
+
+.hamburger path.white{
+	fill:#FFF;
+  opacity:0;
+}
+
+.menu_open .hamburger .a{
+  transform-origin: 4px 4px;
+  transform:rotate(45deg) scale(1.4,1);
+}
+
+.menu_open .hamburger .b{
+  opacity:0;
+}
+
+.menu_open .hamburger .c{
+  transform-origin: 3px 12px;
+  transform:rotate(-45deg) scale(1.4,1);
+}

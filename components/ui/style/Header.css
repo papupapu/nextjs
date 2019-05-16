@@ -1,0 +1,36 @@
+@import '../../../style/vars.css';
+
+#header{
+  position:relative; z-index:11;
+
+  background:#FFF; @apply --bottom-boxShadow;
+
+  @media (--lg) {
+    @apply --reset-bottom-boxShadow;
+  }
+}
+
+#header .sw{
+  display:flex; justify-content:flex-start; align-items:center;  
+}
+
+#header .menu_handle{
+  width:4.4rem; height:4.4rem;
+
+  @media (--lg) {
+    display:none;
+  }
+} 
+
+#header #login{
+  margin-left:auto;
+  width:4.4rem; height:4.4rem;
+
+  @media (--md) {
+    width:5.4rem; height:5.4rem;
+  }
+
+  @media (--lg) {
+    width:6rem; height:6rem;
+  }
+} 

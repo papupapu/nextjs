@@ -1,0 +1,26 @@
+@import '../../../style/vars.css';
+
+#siteNav{
+  position:fixed; z-index:11;
+  top:4.4rem; left:0;
+
+  width:100vw; height:calc(100vh - 4.4rem);
+
+  overflow:hidden;
+
+  transform:translate(-100%, 0);
+  
+  @media (--md) {
+    top:5.4rem;
+    height:calc(100vh - 5.4rem);
+  }
+
+  @media (--lg) {
+    position:static;
+
+    width:auto; height:auto;
+
+    transform:translate(0, 0);
+    @apply --reset-all-transitions;
+  }  
+}
