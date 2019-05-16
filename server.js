@@ -15,6 +15,7 @@ app.prepare().then(
     server.get('*', (req, res) => handle(req, res));
 
     server.listen(
+      port,
       (err) => {
         if (err) {
           throw err;
@@ -22,5 +23,10 @@ app.prepare().then(
         console.log(`> Ready on http://localhost:${port}`);
       },
     );
+  },
+).catch(
+  (ex) => {
+    console.error(ex.stack);
+    process.exit(1);
   },
 );
