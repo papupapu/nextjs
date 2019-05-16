@@ -1,0 +1,5 @@
+@import './vars.css';
+
+.test{
+  color:var(--some-color);
+}
