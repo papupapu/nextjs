@@ -1,3 +1,52 @@
 :root {
-  --some-color: #660000;
+  --font-family-Roboto: 'Roboto', Helvetica, Arial, sans-serif;
+  --font-family-Anton: 'Anton', Helvetica, Arial, sans-serif;
+
+  --light-grey:#f4f4f4; 
+
+  --bottom-boxShadow: {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
+  }
+
+  --reset-bottom-boxShadow: {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }  
+
+  --stanrdard-transition: {
+    transition:transform .3s linear;
+  }
+
+  --background-transition: {
+    transition:background-color .3s linear;
+  }
+
+  --reset-all-transitions: {
+    transition:none;
+  }
+
+  --grid-elements-padding: {
+    padding: 0 1rem;
+
+    @media (--sm) {
+      padding: 0 1.5rem;
+    }
+  
+    @media (--md) {
+      padding: 0 2rem;
+    }
+  
+    @media (--lg) {
+      padding: 0 2.5rem;
+    } 
+    
+    @media (--xxl) {
+      padding:0 8.8rem;
+    }    
+  }
 }
+
+@custom-media --sm (min-width: 375px);
+@custom-media --md (min-width: 768px);
+@custom-media --lg (min-width: 950px);
+@custom-media --xl (min-width: 1025px);
+@custom-media --xxl (min-width: 1201px);

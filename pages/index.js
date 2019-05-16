@@ -1,18 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Header from '../components/Header';
-
-import '../style/test.css';
+import Page from '../components/ui/Page';
 
 const propTypes = {
   userAgent: PropTypes.string,
   ui: PropTypes.instanceOf(Object),
+  modal: PropTypes.bool,
+  modalType: PropTypes.string,
+  modalData: PropTypes.instanceOf(Object),
+  toggleSiteHiddenComponents: PropTypes.func,
 };
 
 const defaultProps = {
   userAgent: '',
   ui: {},
+  modal: false,
+  modalType: '',
+  modalData: {},
+  toggleSiteHiddenComponents: () => {},
 };
 
 class Home extends React.Component {
@@ -25,19 +31,28 @@ class Home extends React.Component {
     const {
       userAgent,
       ui,
+      modal,
+      modalType,
+      modalData,
+      toggleSiteHiddenComponents,
     } = this.props;
     const screensize = Object.keys(ui).length ? `screensize: ${ui.screenSize}` : null;
     return (
-      <React.Fragment>
-        <Header/>
-        <div className="test">
+      <Page
+        pageTemplate="listing"
+        modal={modal}
+        modalType={modalType}
+        modalData={modalData}
+        toggleSiteHiddenComponents={toggleSiteHiddenComponents}
+      >
+        <p>
           userAgent:
           {' '}
           {userAgent}
           <br />
           {screensize}
-        </div>
-        </React.Fragment>
+        </p>
+      </Page>
     );
   }
 }

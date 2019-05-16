@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
+    "compression": "^1.7.4",
+    "express": "^4.16.4",
     "next": "^8.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",

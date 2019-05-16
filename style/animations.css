@@ -1,0 +1,33 @@
+@import './vars.css';
+
+#content,
+#footer{
+  @apply --stanrdard-transition;
+}
+
+.menu_open #siteNav{
+  transform:translate(0, 0);
+  @apply --stanrdard-transition;  
+}
+
+.closing #siteNav{
+  @apply --stanrdard-transition;
+}
+
+.menu_open #content,
+.menu_open #footer{
+  transform:translate(100%, 0);
+}
+
+/*
+  prevent animations on screen sizes that do not require them
+*/
+
+@media (--lg) {
+  #content,
+  #footer,
+  .menu_open #content,
+  .menu_open #footer{
+    @apply --reset-all-transitions;
+  }
+}

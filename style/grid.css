@@ -1,0 +1,63 @@
+@import './vars.css';
+
+#__next{
+  display:grid;
+
+  width:100%; height: 100vh;
+
+  grid-template-columns:auto;
+  grid-template-rows:4.4rem auto 25rem;
+  grid-template-areas:
+    "fullwidth";
+
+  @media (--md) {
+    grid-template-rows:5.4rem auto 25rem;
+  }
+
+  @media (--lg) {
+    grid-template-rows:6rem 4rem auto 25rem;
+  }
+}
+
+#header{
+  grid-area: fullwidth;
+  grid-row: 1;
+
+  @apply --grid-elements-padding;
+}
+
+#siteNav{
+  @media (--lg) {
+    grid-area: fullwidth;
+    grid-row: 2;
+  }
+
+  @apply --grid-elements-padding;
+}
+
+#content{
+  grid-area: fullwidth;
+  grid-row: 2;
+
+  @media (--lg) {
+    grid-row: 3;
+  }
+
+  @apply --grid-elements-padding;
+}
+
+#footer{
+  grid-area: fullwidth;
+  grid-row: 3;
+
+  @media (--lg) {
+    grid-row: 4;
+  }
+
+  @apply --grid-elements-padding;
+}
+
+#fullpage{
+  position:fixed; top:0; left:0;
+  width:100vw; height:100vh;
+}

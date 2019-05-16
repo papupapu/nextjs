@@ -1,0 +1,85 @@
+@import './vars.css';
+
+/*
+ *
+ * FONTS
+ * Customize GoogleFonts font-face with "font-display:fallback;" to improve performances
+ *
+*/
+
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  font-display:fallback;
+  src: local('Anton Regular'), local('Anton-Regular'), url(https://fonts.gstatic.com/s/anton/v10/1Ptgg87LROyAm3Kz-C8CSKlv.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display:fallback;
+  src: local('Roboto Light'), local('Roboto-Light'), url(https://fonts.gstatic.com/s/roboto/v19/KFOlCnqEu92Fr1MmSU5fBBc4AMP6lQ.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display:fallback;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v19/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display:fallback;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v19/KFOlCnqEu92Fr1MmWUlfBBc4AMP6lQ.woff2) format('woff2');
+}
+
+html{
+  box-sizing: border-box;
+
+  font-size: 65%; line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin:0; padding:0;
+  height: 100%;
+
+  font-family:var(--font-family-Roboto);
+
+  -webkit-overflow-scrolling: touch;
+}
+
+*,
+*:before,
+*:after{
+  box-sizing: inherit;
+  margin:0; padding:0;
+}
+
+a{
+  text-decoration:none;
+  background-color: transparent;
+}
+
+button{
+  background-color: transparent; border-style:none;
+  cursor:pointer; outline:0;
+}
+
+.sw{
+  @media (--xl) {
+    margin: 0 auto;
+    max-width:1024px;
+  }
+
+  @media (--xxl) {
+    margin: 0 auto;
+    max-width:1200px;
+  }  
+} 
