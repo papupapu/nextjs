@@ -6,15 +6,36 @@
   background:#FFF; @apply --bottom-boxShadow;
 
   @media (--lg) {
-    @apply --reset-bottom-boxShadow;
+    @apply --reset-boxShadow;
   }
 }
 
 #header .sw{
-  display:flex; justify-content:flex-start; align-items:center;  
+  display:flex; justify-content:center; align-items:center;  
+}
+
+#header .logo{
+  order:2;
+
+  width:14rem; height:4.4rem;
+  background:#c0c0c0;
+
+  @media (--md) {
+    height:5.4rem;
+  }
+
+  @media (--lg) {
+    height:6rem;
+  }  
 }
 
 #header .menu_handle{
+  order:1;
+  display:flex; justify-content:flex-start;
+
+  position:relative;
+
+  margin-right:auto;
   width:4.4rem; height:4.4rem;
 
   @media (--lg) {
@@ -22,10 +43,29 @@
   }
 } 
 
+#header .menu_handle:after{
+  content:'';
+  position:absolute; top:.6rem; left:-.6rem; z-index:-1;
+
+  width:3.2rem; height:3.2rem;
+
+  background:#f0f0f0; border-radius:1.5rem;
+
+  transform: scale(0);
+  transition:transform .15s ease-out;
+}
+
+.menu_open #header .menu_handle:after{
+  transform: scale(1);
+}
+
 #header #login{
+  order:3;
+
   margin-left:auto;
   width:4.4rem; height:4.4rem;
 
+  text-align:right;
   @media (--md) {
     width:5.4rem; height:5.4rem;
   }

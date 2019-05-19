@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Page from '../components/ui/Page';
+import Slider from '../components/slider/Slider';
 
 const propTypes = {
   userAgent: PropTypes.string,
@@ -37,6 +38,7 @@ class Home extends React.Component {
       toggleSiteHiddenComponents,
     } = this.props;
     const screensize = Object.keys(ui).length ? `screensize: ${ui.screenSize}` : null;
+    const deviceType = screensize ? `deviceType: ${ui.deviceType}` : null;
     return (
       <Page
         pageTemplate="listing"
@@ -45,13 +47,26 @@ class Home extends React.Component {
         modalData={modalData}
         toggleSiteHiddenComponents={toggleSiteHiddenComponents}
       >
-        <p>
-          userAgent:
-          {' '}
-          {userAgent}
-          <br />
-          {screensize}
-        </p>
+        <div className="splash">
+          <Slider
+            deviceType={ui.deviceType}
+          />
+        </div>
+        <div className="sw listing">
+          <section className="main">
+            <div>
+              userAgent:
+              {' '}
+              {userAgent}
+              <br />
+              <h1>{screensize}</h1>
+              <h2>{deviceType}</h2>
+            </div>
+          </section>
+          <aside className="aside">
+            aside
+          </aside>
+        </div>
       </Page>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import Close from '../icons/Close';
+import Close from './icons/Close';
 
 const propTypes = {
   type: PropTypes.string,
@@ -252,17 +252,15 @@ class Modal extends React.Component {
   }
 
   render() {
-    /*
     const close = (
       <button type="button" className="modal_handle" onClick={this.close}>
         {Close()}
       </button>
     );
-    */
     const body = this.modalBody();
     return (
       <div ref={(modal) => { this.modal = modal; }} className="modal">
-        {/* close */}
+        {close}
         {body}
       </div>
     );

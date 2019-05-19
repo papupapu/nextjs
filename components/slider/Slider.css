@@ -1,0 +1,44 @@
+@import '../../style/vars.css';
+
+.slider{
+  width:100%; height:100%;
+
+  overflow:hidden;
+}
+
+.slider ul{
+  display:flex; flex-flow:row nowrap; justify-content:flex-start;
+  width:300%; height:100%;
+
+  transition:transform .3s ease-out;
+
+  @media (--lg) {
+    width:calc((((100vw / 4) * 3) + 4rem) * 3);
+    justify-content:space-between;
+  }  
+}
+
+.slider li{
+  flex-grow: 1;
+
+  display:flex; flex-flow:row nowrap; justify-content:center; align-items:center;
+
+  font-size:6rem;
+
+  @media (--lg) {
+    max-width:calc((100vw / 4) * 3);
+    margin:0 2rem;
+  }
+}
+
+.slider .one{
+  background:rgba(0, 255, 0, .3);
+}
+
+.slider .two{
+  background:rgba(0, 255, 0, .6);
+}
+
+.slider .three{
+  background:rgba(0, 255, 0, .9);
+}

@@ -53,9 +53,7 @@ const Page = (
       />
       <Sitenav />
       <div id="content">
-        <div className="sw">
-          {children}
-        </div>
+        {children}
       </div>
       <Footer />
       {

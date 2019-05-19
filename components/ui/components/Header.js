@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Hamburger from './icons/Hamburger';
-
 const propTypes = {
   toggleSiteHiddenComponents: PropTypes.func,
 };
@@ -14,16 +12,19 @@ const defaultProps = {
 const Header = ({ toggleSiteHiddenComponents }) => (
   <header id="header">
     <div className="sw">
+      <div className="logo" />
       <button
         type="button"
-        className="menu_handle"
+        className="hamburger menu_handle"
         onClick={
           (e) => {
             toggleSiteHiddenComponents(e, {});
           }
         }
       >
-        {Hamburger()}
+        <span className="hamburger-box">
+          <span className="hamburger-inner" />
+        </span>
       </button>
       <button
         type="button"

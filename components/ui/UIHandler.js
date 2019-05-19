@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { userDevice } from '../../helpers/DOMHelpers';
+import userDevice from '../../helpers/DOMHelpers';
 
 const UIHandler = Comp => class UIHandlerComponent extends React.Component {
   static async getInitialProps(args) {
@@ -81,12 +81,8 @@ const UIHandler = Comp => class UIHandlerComponent extends React.Component {
         isMenu = action === 'menu_open';
         if (docClass.contains(action)) {
           docClass.remove(action);
-          docClass.add(isMenu ? 'menu_closing' : 'closing');
-          if (isMenu) {
-            setTimeout(() => { docClass.remove('menu_closing'); }, 705);
-          } else {
-            setTimeout(() => { docClass.remove('closing'); }, 305);
-          }
+          docClass.add('closing');
+          setTimeout(() => { docClass.remove('closing'); }, 305);
           // enableScroll();
         } else {
           this.uiHiddenComponents.forEach(
@@ -94,7 +90,9 @@ const UIHandler = Comp => class UIHandlerComponent extends React.Component {
               const oldaction = `${component}_open`;
               if (docClass.contains(oldaction) && oldaction !== action) {
                 docClass.remove(oldaction);
-                updateModalState = oldaction === 'modal_open';
+                if (!updateModalState) {
+                  updateModalState = oldaction === 'modal_open';
+                }
               }
             },
           );

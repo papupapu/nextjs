@@ -1,5 +1,54 @@
 @import '../../../style/vars.css';
 
 #content{
+  position:relative;
   background:var(--light-grey);
+}
+
+#content .splash{
+  margin:0 0 1.5rem -1.5rem;
+
+  width:calc(100% + 3rem); height:40rem;
+  background:#a1a1a1;
+
+  @media (--md) {
+    margin:0 0 2rem -2rem;
+    width:calc(100% + 4rem); 
+    height:50vh;
+  }
+
+  @media (--lg) {
+    position:absolute; top:0; left:0;
+    margin-left:0;
+    width:100%; 
+    height:50vh;
+  }  
+}
+
+#content .listing{
+  display:grid;
+  grid-template-columns:auto;
+  grid-template-row:auto auto;
+  gap:1.5rem;
+
+  @media (--lg) {
+    grid-template-columns:auto 30rem;
+    grid-template-row:auto;
+    gap:2.5rem;
+
+    margin-top:calc(50vh + 2.5rem);
+  }
+
+  @media (--xl) {
+    grid-template-columns:auto 35rem;    
+  }
+
+}
+
+#content .main{
+  background:#c0c0c0;
+}
+
+#content .aside{
+  background:#c0c0c0;
 }

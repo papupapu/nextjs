@@ -42,7 +42,7 @@
 html{
   box-sizing: border-box;
 
-  font-size: 65%; line-height: 1.15;
+  font-size: 62.5%; line-height: 1.15;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -70,6 +70,12 @@ a{
 button{
   background-color: transparent; border-style:none;
   cursor:pointer; outline:0;
+}
+
+ul,
+ol,
+dl{
+  list-style-type: none;
 }
 
 .sw{

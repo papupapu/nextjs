@@ -20,7 +20,40 @@
 
     width:auto; height:auto;
 
+    background:#e4e4e4;
+    overflow:hidden;
+
     transform:translate(0, 0);
     @apply --reset-all-transitions;
   }  
+}
+
+#siteNav ul{
+  margin-top:2.2rem;
+  line-height:4.4rem;
+
+  @media (--lg) {
+    display:flex; flex-flow:row nowrap; justify-content:flex-start;
+
+    margin-top:0;
+    line-height:4.2rem;
+  }
+}
+
+#siteNav li{
+  font-size:2rem; font-family:var(--font-family-Anton);
+  border-bottom:1px solid #e4e4e4;
+
+  @media (--lg) {
+    margin-right:4rem;
+    border-bottom:0 none;
+  }
+}
+
+#siteNav li:last-of-type{  
+  border:0 none;
+
+  @media (--lg) {
+    margin-right:0;
+  }
 }

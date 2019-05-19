@@ -8,7 +8,7 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
   }
 
-  --reset-bottom-boxShadow: {
+  --reset-boxShadow: {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }  
 
@@ -41,12 +41,39 @@
     
     @media (--xxl) {
       padding:0 8.8rem;
-    }    
+    }
+  }
+
+  --content-element-padding: {
+    padding: 0 1rem;
+
+    @media (--sm) {
+      padding: 0 1.5rem;
+    }
+  
+    @media (--md) {
+      padding: 0 2rem;
+    }
+  
+    @media (--lg) {
+      padding: 0;
+    } 
+  }
+
+  --content-listing-element-padding: {
+    @media (--lg) {
+      margin: 0 2.5rem;
+    } 
+    
+    @media (--xl) {
+      margin:0 auto;
+      padding: 0 2.5rem;
+    }
   }
 }
 
 @custom-media --sm (min-width: 375px);
-@custom-media --md (min-width: 768px);
+@custom-media --md (min-width: 568px);
 @custom-media --lg (min-width: 950px);
 @custom-media --xl (min-width: 1025px);
-@custom-media --xxl (min-width: 1201px);
+@custom-media --xxl (min-width: 1200px);

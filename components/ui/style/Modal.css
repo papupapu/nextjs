@@ -1,9 +1,10 @@
+@import '../../../style/vars.css';
+
 .modal{
 	position:fixed; z-index:31;
-	top:0; left:0;
-	padding:1rem;
-	width:100vw; height:100vh;
-	background:#f0f0f0;
+	top:1rem; left:1rem;
+
+	width:calc(100vw - 2rem); height:calc(100vh - 2rem);
 	transition:all .25s ease-out;
 }
 
@@ -33,8 +34,8 @@
 
 .modal .format{
 	position:absolute;
-	top:1rem; left:1rem;
-	width:calc(100% - 2rem); height:calc(100% - 2rem);
+	top:0; left:0;
+	width:100%; height:100%;
 	background:#FFF;
 	overflow-y:auto;	
 }
@@ -67,7 +68,7 @@
 	color:#676767;
 }
 
-@media screen and (min-width: 768px) { /* iPad */
+@media (--md) {
 
 	.modal{
 		top:50%; left:50%;
@@ -75,7 +76,16 @@
 		width:calc(100vw - 3rem); height:auto; max-height:calc(100vh - 20rem); min-height:450px;
 		background:#FFF;
 		transform:translate(-50%,-50%);
+	}
 
+	.modal .modal_handle{
+		top:0; right:0;
+	}
+
+	.modal h1{
+		position:fixed;
+		top:0; left:0;
+		width:100%;
 	}
 
 	.modal .format h2{
@@ -94,7 +104,7 @@
 
 }
 
-@media screen and (min-width: 1024px) { /* Desk */
+@media (--xl) {
 
 	.modal{
 		width:calc(1000px - 3rem);
