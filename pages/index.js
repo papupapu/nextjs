@@ -39,6 +39,7 @@ class Home extends React.Component {
     } = this.props;
     const screensize = Object.keys(ui).length ? `screensize: ${ui.screenSize}` : null;
     const deviceType = screensize ? `deviceType: ${ui.deviceType}` : null;
+    const viewportWidth = screensize ? ui.viewport.width : 0;
     return (
       <Page
         pageTemplate="listing"
@@ -50,6 +51,7 @@ class Home extends React.Component {
         <div className="splash">
           <Slider
             deviceType={ui.deviceType}
+            viewportWidth={viewportWidth}
           />
         </div>
         <div className="sw listing">
@@ -60,7 +62,16 @@ class Home extends React.Component {
               {userAgent}
               <br />
               <h1>{screensize}</h1>
-              <h2>{deviceType}</h2>
+              <h1>{deviceType}</h1>
+              {
+                viewportWidth !== 0
+                  && (
+                    <h1>
+                      viewportWidth:
+                      {viewportWidth}
+                    </h1>
+                  )
+              }
             </div>
           </section>
           <aside className="aside">

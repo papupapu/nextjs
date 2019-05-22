@@ -43,33 +43,6 @@
       padding:0 8.8rem;
     }
   }
-
-  --content-element-padding: {
-    padding: 0 1rem;
-
-    @media (--sm) {
-      padding: 0 1.5rem;
-    }
-  
-    @media (--md) {
-      padding: 0 2rem;
-    }
-  
-    @media (--lg) {
-      padding: 0;
-    } 
-  }
-
-  --content-listing-element-padding: {
-    @media (--lg) {
-      margin: 0 2.5rem;
-    } 
-    
-    @media (--xl) {
-      margin:0 auto;
-      padding: 0 2.5rem;
-    }
-  }
 }
 
 @custom-media --sm (min-width: 375px);
