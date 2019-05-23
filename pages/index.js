@@ -22,6 +22,18 @@ const defaultProps = {
   toggleSiteHiddenComponents: () => {},
 };
 
+const slides = [
+  {
+    cont: 'one',
+  },
+  {
+    cont: 'two',
+  },
+  {
+    cont: 'three',
+  },
+];
+
 class Home extends React.Component {
   static async getInitialProps({ req }) {
     const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
@@ -37,9 +49,10 @@ class Home extends React.Component {
       modalData,
       toggleSiteHiddenComponents,
     } = this.props;
-    const screensize = Object.keys(ui).length ? `screensize: ${ui.screenSize}` : null;
-    const deviceType = screensize ? `deviceType: ${ui.deviceType}` : null;
-    const viewportWidth = screensize ? ui.viewport.width : 0;
+    const screenSize = 'screenSize' in ui ? `screenSize: ${ui.screenSize}` : null;
+    const deviceType = 'deviceType' in ui ? `deviceType: ${ui.deviceType}` : null;
+    const viewport = 'viewport' in ui ? `viewportWidth: ${ui.viewport.width}` : null;
+    const viewportWidth = 'viewport' in ui ? ui.viewport.width : null;
     return (
       <Page
         pageTemplate="listing"
@@ -48,12 +61,18 @@ class Home extends React.Component {
         modalData={modalData}
         toggleSiteHiddenComponents={toggleSiteHiddenComponents}
       >
-        <div className="splash">
-          <Slider
-            deviceType={ui.deviceType}
-            viewportWidth={viewportWidth}
-          />
-        </div>
+        {
+          slides
+            && (
+              <div className="splash">
+                <Slider
+                  slides={slides}
+                  screenSize={ui.screenSize}
+                  viewportWidth={viewportWidth}
+                />
+              </div>
+            )
+        }
         <div className="sw listing">
           <section className="main">
             <div>
@@ -61,17 +80,9 @@ class Home extends React.Component {
               {' '}
               {userAgent}
               <br />
-              <h1>{screensize}</h1>
+              <h1>{screenSize}</h1>
               <h1>{deviceType}</h1>
-              {
-                viewportWidth !== 0
-                  && (
-                    <h1>
-                      viewportWidth:
-                      {viewportWidth}
-                    </h1>
-                  )
-              }
+              <h1>{viewport}</h1>
             </div>
           </section>
           <aside className="aside">

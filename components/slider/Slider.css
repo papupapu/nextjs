@@ -8,22 +8,14 @@
 
 .slider ul{
   display:flex; flex-flow:row nowrap; justify-content:flex-start;
-  width:calc(100vw * var(--slides-count)); height:100%;
+  height:100%;
 
   /*transition:transform .3s ease-out;*/
 
   @media (--lg) {
-    width:calc((100vw - 1rem) * var(--slides-count));
     justify-content:space-between;
   }
 
-  @media (--xl) {
-    width:calc((1024px + 4rem) * var(--slides-count));
-  }
-
-  @media (--xxl) {
-    width:calc((1200px + 4rem) * var(--slides-count));
-  }
 }
 
 .slider li{

@@ -6,41 +6,31 @@ import { isValidVar, isValidString } from '../../helpers/jsHelpers';
 import './Slider.css';
 
 const propTypes = {
-  deviceType: PropTypes.string,
+  slides: PropTypes.instanceOf(Array),
+  screenSize: PropTypes.string,
   viewportWidth: PropTypes.number,
 };
 
 const defaultProps = {
-  deviceType: '',
+  slides: [],
+  screenSize: '',
   viewportWidth: 0,
 };
 
-const slides = [
-  {
-    cont: 'one',
-  },
-  {
-    cont: 'two',
-  },
-  {
-    cont: 'three',
-  },
-];
-
 class Slider extends React.Component {
   static getDerivedStateFromProps(props, state) {
-    const updatedDeviceType = isValidString(props.deviceType)
-      && props.deviceType !== state.deviceType ? props.deviceType : false;
+    const updatedScreensize = isValidString(props.screenSize)
+      && props.screenSize !== state.screenSize ? props.screenSize : false;
 
     const updatedViewportWidth = isValidVar(props.viewportWidth)
       && props.viewportWidth !== state.viewportWidth ? props.viewportWidth : false;
 
     if (
-      updatedDeviceType
+      updatedScreensize
       || updatedViewportWidth
     ) {
       return {
-        deviceType: props.deviceType,
+        screenSize: props.screenSize,
         viewportWidth: props.viewportWidth,
       };
     }
@@ -51,33 +41,34 @@ class Slider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deviceType: props.deviceType,
+      screenSize: props.screenSize,
       viewportWidth: props.viewportWidth,
-      sliderWidth: null,
-      sliderCoords: 'translate(0, 0)',
       cur: 1,
+      clonesForLoop: 2,
+      ready: false,
+      sliderWidth: null,
+      sliderCoords: null,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const {
-      deviceType,
+      screenSize,
       viewportWidth,
       sliderCoords,
     } = this.state;
-
-    const updatedDeviceType = nextState.deviceType !== deviceType;
+    const updatedScreensize = nextState.screenSize !== screenSize;
     const updatedViewportWidth = nextState.viewportWidth !== viewportWidth;
     const updatedSliderCoords = 'sliderCoords' in nextState
       && isValidVar(nextState.sliderCoords)
       && nextState.sliderCoords !== sliderCoords;
     if (
-      updatedDeviceType
+      updatedScreensize
       || updatedViewportWidth
       || updatedSliderCoords
     ) {
       if (updatedViewportWidth) {
-        this.setUp(nextState.viewportWidth);
+        this.setUp(nextState.viewportWidth, nextState.screenSize);
       }
       return true;
     }
@@ -91,10 +82,18 @@ class Slider extends React.Component {
     } = this.state;
     const rightCur = newCur || cur;
     const rightItemSize = newItemSize || itemSize;
-    return ((viewportWidth - rightItemSize) + ((viewportWidth - rightItemSize) / 2) * -1) - (rightItemSize * rightCur);
+    return (
+      (viewportWidth - rightItemSize)
+      + ((viewportWidth - rightItemSize) / 2)
+      * -1
+    )
+    - (rightItemSize * rightCur);
   }
 
-  setUp = (viewportWidth) => {
+  setUp = (viewportWidth, screenSize) => {
+    const {
+      slides,
+    } = this.props;
     let itemWidth = 0;
     let itemMargins = 0;
     let contentPadding = 0;
@@ -115,9 +114,13 @@ class Slider extends React.Component {
       ? itemWidth + itemMargins
       : (viewportWidth - contentPadding) + itemMargins;
     const coords = this.computeCoords(viewportWidth, itemSize, null);
+    const clonesForLoop = screenSize === 'xl' || screenSize === 'xxl'
+      ? 2
+      : 2;
     this.setState({
+      ready: true,
       itemSize,
-      sliderWidth: `${itemSize * (slides.length + 2)}px`,
+      sliderWidth: `${itemSize * (slides.length + clonesForLoop)}px`,
       sliderCoords: `translate(${coords}px, 0)`,
     });
   }
@@ -144,7 +147,7 @@ class Slider extends React.Component {
     </li>
   );
 
-  createSlides = (items) => {
+  createSlides = (items, clonesForLoop) => {
     const htmlSlides = items.map(slide => this.slideTemplate(slide));
     htmlSlides.unshift(this.slideTemplate(items[items.length - 1]));
     htmlSlides.push(this.slideTemplate(items[0]));
@@ -153,25 +156,39 @@ class Slider extends React.Component {
 
   render() {
     const {
+      slides,
+    } = this.props;
+    const {
+      ready,
       sliderWidth,
       sliderCoords,
+      clonesForLoop,
     } = this.state;
-    const items = this.createSlides(slides);
-    return (
-      <div
-        className="slider"
-        onClick={
-          (e) => {
-            this.slide();
+    const items = this.createSlides(slides, clonesForLoop);
+    if (ready) {
+      return (
+        <div
+          className="slider"
+          onClick={
+            (e) => {
+              this.slide();
+            }
           }
-        }
-      >
-        <ul
-          style={{ '--slides-count': items.length, width: sliderWidth, transform: sliderCoords }}
         >
-          {items}
-        </ul>
-      </div>
+          <ul
+            style={{ '--slides-count': items.length, width: sliderWidth, transform: sliderCoords }}
+          >
+            {items}
+          </ul>
+        </div>
+      );
+    }
+    return (
+      <section>
+        <article>one</article>
+        <article>one</article>
+        <article>one</article>
+      </section>
     );
   }
 }
