@@ -94,6 +94,11 @@ class Slider extends React.Component {
     const {
       slides,
     } = this.props;
+    const {
+      cur,
+      ready,
+      clonesForLoop,
+    } = this.state;
     let itemWidth = 0;
     let itemMargins = 0;
     let contentPadding = 0;
@@ -113,14 +118,15 @@ class Slider extends React.Component {
     const itemSize = itemWidth !== 0
       ? itemWidth + itemMargins
       : (viewportWidth - contentPadding) + itemMargins;
-    const coords = this.computeCoords(viewportWidth, itemSize, null);
-    const clonesForLoop = screenSize === 'xl' || screenSize === 'xxl'
-      ? 2
+    const clonesForLoopCheck = screenSize === 'xl' || screenSize === 'xxl'
+      ? 4
       : 2;
+    const coords = this.computeCoords(viewportWidth, itemSize, null);
     this.setState({
       ready: true,
       itemSize,
-      sliderWidth: `${itemSize * (slides.length + clonesForLoop)}px`,
+      clonesForLoop: clonesForLoopCheck,
+      sliderWidth: `${itemSize * (slides.length + clonesForLoopCheck)}px`,
       sliderCoords: `translate(${coords}px, 0)`,
     });
   }
@@ -151,6 +157,10 @@ class Slider extends React.Component {
     const htmlSlides = items.map(slide => this.slideTemplate(slide));
     htmlSlides.unshift(this.slideTemplate(items[items.length - 1]));
     htmlSlides.push(this.slideTemplate(items[0]));
+    if (clonesForLoop === 4) {
+      htmlSlides.unshift(this.slideTemplate(items[items.length - 2]));
+      htmlSlides.push(this.slideTemplate(items[1]));
+    }
     return htmlSlides;
   }
 
