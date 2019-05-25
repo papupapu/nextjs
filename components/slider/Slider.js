@@ -46,9 +46,15 @@ class Slider extends React.Component {
       cur: 1,
       clonesForLoop: 2,
       ready: false,
+      sliderClassName: null,
       sliderWidth: null,
       sliderCoords: null,
+      buttonsCoords: null,
     };
+    this.startX = 0;
+    this.startY = 0;
+    this.deltaX = 0;
+    this.deltaY = 0;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -75,6 +81,36 @@ class Slider extends React.Component {
     return false;
   }
 
+  computeItemSize = (viewportWidth) => {
+    let itemWidth = 0;
+    let itemMargins = 0;
+    let contentPadding = 0;
+    if (viewportWidth >= 950) {
+      itemMargins = 40;
+      contentPadding = 50;
+    }
+    if (viewportWidth >= 1024) {
+      const maxWidth = viewportWidth - contentPadding;
+      itemWidth = maxWidth < 1024 ? maxWidth : 1024;
+    }
+    if (viewportWidth >= 1200) {
+      contentPadding = 176;
+      const maxWidth = viewportWidth - contentPadding;
+      itemWidth = maxWidth < 1200 ? maxWidth : 1200;
+    }
+    return itemWidth !== 0
+      ? itemWidth + itemMargins
+      : (viewportWidth - contentPadding) + itemMargins;
+  }
+
+  computeCurrentSlideIndex = (cur, clonesForLoop, rightClonesForLoop) => {
+    let rightCur = cur;
+    if (clonesForLoop !== rightClonesForLoop) {
+      rightCur = rightClonesForLoop > clonesForLoop ? rightCur + 1 : rightCur - 1;
+    }
+    return rightCur;
+  }
+
   computeCoords = (viewportWidth, newItemSize = null, newCur = null) => {
     const {
       cur,
@@ -90,58 +126,95 @@ class Slider extends React.Component {
     - (rightItemSize * rightCur);
   }
 
-  setUp = (viewportWidth, screenSize) => {
+  computeButtonsCoords = (viewportWidth, itemSize) => {
+    const coords = {};
+    const center = (viewportWidth / 2) - 30;
+    coords.prevButton = center - (itemSize / 2) + 20;
+    coords.nextButton = center + (itemSize / 2) - 20;
+    return coords;
+  }
+
+  setUp = (viewportWidth, currentScreenSize) => {
     const {
       slides,
     } = this.props;
     const {
       cur,
-      ready,
       clonesForLoop,
     } = this.state;
-    let itemWidth = 0;
-    let itemMargins = 0;
-    let contentPadding = 0;
-    if (viewportWidth >= 950) {
-      itemMargins = 40;
-      contentPadding = 50;
-    }
-    if (viewportWidth >= 1024) {
-      const maxWidth = viewportWidth - 50;
-      itemWidth = maxWidth < 1024 ? maxWidth : 1024;
-      contentPadding = 50;
-    }
-    if (viewportWidth >= 1200) {
-      const maxWidth = viewportWidth - 176;
-      itemWidth = maxWidth < 1200 ? maxWidth : 1200;
-    }
-    const itemSize = itemWidth !== 0
-      ? itemWidth + itemMargins
-      : (viewportWidth - contentPadding) + itemMargins;
-    const clonesForLoopCheck = screenSize === 'xl' || screenSize === 'xxl'
-      ? 4
-      : 2;
-    const coords = this.computeCoords(viewportWidth, itemSize, null);
+    const isWideScreen = currentScreenSize === 'xl' || currentScreenSize === 'xxl';
+    const hasButtons = currentScreenSize === 'lg' || isWideScreen;
+    const itemSize = this.computeItemSize(viewportWidth);
+    const rightClonesForLoop = isWideScreen ? 4 : 2;
+    const rightCur = this.computeCurrentSlideIndex(cur, clonesForLoop, rightClonesForLoop);
+    const buttonsCoords = hasButtons ? this.computeButtonsCoords(viewportWidth, itemSize) : null;
+    const coords = this.computeCoords(viewportWidth, itemSize, rightCur);
     this.setState({
       ready: true,
+      cur: rightCur,
       itemSize,
-      clonesForLoop: clonesForLoopCheck,
-      sliderWidth: `${itemSize * (slides.length + clonesForLoopCheck)}px`,
+      clonesForLoop: rightClonesForLoop,
+      sliderClassName: 'noTransition',
+      sliderWidth: `${itemSize * (slides.length + rightClonesForLoop)}px`,
       sliderCoords: `translate(${coords}px, 0)`,
+      buttonsCoords,
     });
   }
 
-  slide = () => {
+  goToSlide = (cur) => {
     const {
-      cur,
       viewportWidth,
     } = this.state;
-    const newCur = cur + 1;
+    const coords = this.computeCoords(viewportWidth, null, cur);
+    this.setState(
+      {
+        sliderClassName: 'noTransition',
+        sliderCoords: `translate(${coords}px, 0)`,
+        cur,
+      },
+    );
+  }
+
+  slide = (dir) => {
+    const {
+      slides,
+    } = this.props;
+    const {
+      cur,
+      clonesForLoop,
+      viewportWidth,
+    } = this.state;
+    const newCur = dir === 'next' ? cur + 1 : cur - 1;
     const coords = this.computeCoords(viewportWidth, null, newCur);
-    this.setState({
-      sliderCoords: `translate(${coords}px, 0)`,
-      cur: newCur,
-    });
+    const adjustToLoopClones = clonesForLoop === 4 ? 1 : 0;
+    const shouldGoToFirstSlide = newCur === ((slides.length - 1) + clonesForLoop) - adjustToLoopClones;
+    const shouldGoToLastSlide = newCur === adjustToLoopClones;
+    this.setState(
+      {
+        sliderClassName: null,
+        sliderCoords: `translate(${coords}px, 0)`,
+        cur: newCur,
+      },
+      () => {
+        if (shouldGoToFirstSlide) {
+          const firstSlide = clonesForLoop === 4 ? 2 : 1;
+          setTimeout(
+            () => {
+              this.goToSlide(firstSlide);
+            },
+            301,
+          );
+        } else if (shouldGoToLastSlide) {
+          const lastSlide = clonesForLoop === 4 ? slides.length + 1 : slides.length;
+          setTimeout(
+            () => {
+              this.goToSlide(lastSlide);
+            },
+            301,
+          );
+        }
+      },
+    );
   }
 
   slideTemplate = slide => (
@@ -164,32 +237,95 @@ class Slider extends React.Component {
     return htmlSlides;
   }
 
+  touchStart(event) {
+    const touches = event.touches[0];
+    this.startX = touches.pageX;
+    this.startY = touches.pageY;
+  }
+
+  touchMove(event) {
+    const touches = event.touches[0];
+    const deltaY = touches.pageY - this.startY;
+    const deltaX = touches.pageX - this.startX;
+    if (Math.abs(deltaY) > 5 && Math.abs(deltaY) > Math.abs(deltaX) / 2) {
+      this.deltaX = 0;
+    } else {
+      // disableScroll();
+      this.dir = deltaX < 0 ? 'next' : 'prev';
+      if ((this.dir === 'next' && this.cur < this.tot - 1) || (this.dir === 'prev' && this.cur > 0)) {
+        this.deltaX = deltaX;
+        const coords = deltaX + ((this.state.sizes[0] * this.cur) * -1);
+        this.slider.style.transform = `translate(${coords}px,0)`;
+      }
+    }
+  }
+
+  touchEnd() {
+    // enableScroll();
+    if (Math.abs(this.deltaX) > this.state.sizes[0] / 4) {
+      this.handleClick(this.dir);
+    } else {
+      this.sliderGoToCoords();
+    }
+    this.startX = 0;
+    this.startY = 0;
+    this.deltaX = 0;
+  }
+
   render() {
     const {
       slides,
     } = this.props;
     const {
       ready,
+      sliderClassName,
       sliderWidth,
       sliderCoords,
       clonesForLoop,
+      buttonsCoords,
     } = this.state;
-    const items = this.createSlides(slides, clonesForLoop);
     if (ready) {
+      const items = this.createSlides(slides, clonesForLoop);
       return (
-        <div
-          className="slider"
-          onClick={
-            (e) => {
-              this.slide();
-            }
+        <div className="slider">
+          {
+            buttonsCoords
+              && (
+                <button
+                  type="button"
+                  style={{ left: buttonsCoords.prevButton }}
+                  onClick={
+                    () => {
+                      this.slide('prev');
+                    }
+                  }
+                >
+                  aaa
+                </button>
+              )
           }
-        >
           <ul
-            style={{ '--slides-count': items.length, width: sliderWidth, transform: sliderCoords }}
+            className={sliderClassName}
+            style={{ width: sliderWidth, transform: sliderCoords }}
           >
             {items}
           </ul>
+          {
+            buttonsCoords
+              && (
+                <button
+                  type="button"
+                  style={{ left: buttonsCoords.nextButton }}
+                  onClick={
+                    () => {
+                      this.slide('next');
+                    }
+                  }
+                >
+                  aaa
+                </button>
+              )
+          }
         </div>
       );
     }

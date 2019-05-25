@@ -5,7 +5,6 @@ import Page from '../components/ui/Page';
 import Slider from '../components/slider/Slider';
 
 const propTypes = {
-  userAgent: PropTypes.string,
   ui: PropTypes.instanceOf(Object),
   modal: PropTypes.bool,
   modalType: PropTypes.string,
@@ -14,7 +13,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  userAgent: '',
   ui: {},
   modal: false,
   modalType: '',
@@ -35,14 +33,12 @@ const slides = [
 ];
 
 class Home extends React.Component {
-  static async getInitialProps({ req }) {
-    const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
-    return { userAgent };
+  static async getInitialProps() {
+    return { page: 'home' };
   }
 
   render() {
     const {
-      userAgent,
       ui,
       modal,
       modalType,
@@ -76,10 +72,6 @@ class Home extends React.Component {
         <div className="sw listing">
           <section className="main">
             <div>
-              userAgent:
-              {' '}
-              {userAgent}
-              <br />
               <h1>{screenSize}</h1>
               <h1>{deviceType}</h1>
               <h1>{viewport}</h1>

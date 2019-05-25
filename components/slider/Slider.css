@@ -1,6 +1,8 @@
 @import '../../style/vars.css';
 
 .slider{
+  position:absolute; top:0; left:0;
+
   width:100%; height:100%;
 
   overflow:hidden;
@@ -10,15 +12,15 @@
   display:flex; flex-flow:row nowrap; justify-content:flex-start;
   height:100%;
 
-  transition:transform 1s cubic-bezier(0.9, 1, 0.5, 1);
+  @apply --stanrdard-transition;
 
   @media (--lg) {
     justify-content:space-between;
   }
 }
 
-.slider ul{
-
+.slider ul.noTransition{
+  @apply --reset-all-transitions;
 }
 
 .slider li{
@@ -53,4 +55,13 @@
 
 .slider .three{
   background:rgba(0, 255, 0, .9);
+}
+
+.slider button{
+  position:absolute; z-index:1; top:50%; left:0;
+
+  margin-top:-3rem;
+  width:6rem; height:6rem;
+
+  background:#FFF; border-radius:3rem;
 }

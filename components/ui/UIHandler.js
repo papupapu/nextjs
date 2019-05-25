@@ -4,9 +4,8 @@ import userDevice from '../../helpers/DOMHelpers';
 
 const UIHandler = Comp => class UIHandlerComponent extends React.Component {
   static async getInitialProps(args) {
-    const userAgent = args.ctx.req ? args.ctx.req.headers['user-agent'] : navigator.userAgent;
     const componentPropsFromFetch = Comp.getInitialProps ? await Comp.getInitialProps(args) : null;
-    return { userAgent, componentPropsFromFetch };
+    return { componentPropsFromFetch };
   }
 
   constructor(props) {
@@ -46,6 +45,7 @@ const UIHandler = Comp => class UIHandlerComponent extends React.Component {
       (
         updatedUi.screenSize === 'lg'
         || updatedUi.screenSize === 'xl'
+        || updatedUi.screenSize === 'xxl'
       )
       && menu
     ) {
