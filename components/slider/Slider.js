@@ -46,32 +46,35 @@ class Slider extends React.Component {
       cur: 1,
       clonesForLoop: 2,
       ready: false,
+      buttonsCoords: null,
       sliderClassName: null,
       sliderWidth: null,
-      sliderCoords: null,
-      buttonsCoords: null,
+      sliderCoords: null,      
     };
-    this.startX = 0;
-    this.startY = 0;
-    this.deltaX = 0;
-    this.deltaY = 0;
+    this.sliderClassName = null;
+    this.sliderWidth = null;
+    this.sliderCoords = null;
+
+    this.dragStartX = 0;
+    this.dragStartY = 0;
+    this.dragDeltaX = 0;
+    this.dragDeltaY = 0;
+    this.dragDirection = '';
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const {
+      ready,
       screenSize,
       viewportWidth,
-      sliderCoords,
     } = this.state;
+    const isSliderReady = nextState.ready !== ready;
     const updatedScreensize = nextState.screenSize !== screenSize;
     const updatedViewportWidth = nextState.viewportWidth !== viewportWidth;
-    const updatedSliderCoords = 'sliderCoords' in nextState
-      && isValidVar(nextState.sliderCoords)
-      && nextState.sliderCoords !== sliderCoords;
     if (
-      updatedScreensize
+      isSliderReady
+      || updatedScreensize
       || updatedViewportWidth
-      || updatedSliderCoords
     ) {
       if (updatedViewportWidth) {
         this.setUp(nextState.viewportWidth, nextState.screenSize);
@@ -141,6 +144,7 @@ class Slider extends React.Component {
     const {
       cur,
       clonesForLoop,
+      ready,
     } = this.state;
     const isWideScreen = currentScreenSize === 'xl' || currentScreenSize === 'xxl';
     const hasButtons = currentScreenSize === 'lg' || isWideScreen;
@@ -149,28 +153,50 @@ class Slider extends React.Component {
     const rightCur = this.computeCurrentSlideIndex(cur, clonesForLoop, rightClonesForLoop);
     const buttonsCoords = hasButtons ? this.computeButtonsCoords(viewportWidth, itemSize) : null;
     const coords = this.computeCoords(viewportWidth, itemSize, rightCur);
-    this.setState({
-      ready: true,
-      cur: rightCur,
-      itemSize,
-      clonesForLoop: rightClonesForLoop,
-      sliderClassName: 'noTransition',
-      sliderWidth: `${itemSize * (slides.length + rightClonesForLoop)}px`,
-      sliderCoords: `translate(${coords}px, 0)`,
-      buttonsCoords,
-    });
+    if (!ready) {
+      this.setState(
+        {
+          ready: true,
+          cur: rightCur,
+          itemSize,
+          clonesForLoop: rightClonesForLoop,
+          buttonsCoords,
+          sliderClassName: 'noTransition',
+          sliderWidth: `${itemSize * (slides.length + rightClonesForLoop)}px`,
+          sliderCoords: `translate(${coords}px, 0)`,
+        },
+      );
+    } else {
+      this.slider.classList.add('noTransition');
+      this.slider.style.width = `${itemSize * (slides.length + rightClonesForLoop)}px`;
+      this.slider.tranform = `translate(${coords}px, 0)`;
+      this.setState(
+        {
+          cur: rightCur,
+          itemSize,
+          clonesForLoop: rightClonesForLoop,
+          buttonsCoords,
+        },
+      );
+    }
   }
 
-  goToSlide = (cur) => {
+  goToSlide = (newCur = null) => {
     const {
+      cur,
       viewportWidth,
     } = this.state;
-    const coords = this.computeCoords(viewportWidth, null, cur);
+    const rightCur = newCur || cur;
+    const coords = this.computeCoords(viewportWidth, null, rightCur);
+    if (newCur) {
+      this.slider.classList.add('noTransition');
+    } else if (this.slider.classList.contains('noTransition')) {
+      this.slider.classList.remove('noTransition');
+    }
+    this.slider.style.transform = `translate(${coords}px, 0)`;
     this.setState(
       {
-        sliderClassName: 'noTransition',
-        sliderCoords: `translate(${coords}px, 0)`,
-        cur,
+        cur: rightCur,
       },
     );
   }
@@ -189,10 +215,12 @@ class Slider extends React.Component {
     const adjustToLoopClones = clonesForLoop === 4 ? 1 : 0;
     const shouldGoToFirstSlide = newCur === ((slides.length - 1) + clonesForLoop) - adjustToLoopClones;
     const shouldGoToLastSlide = newCur === adjustToLoopClones;
+    if (this.slider.classList.contains('noTransition')) {
+      this.slider.classList.remove('noTransition');
+    }
+    this.slider.style.transform = `translate(${coords}px, 0)`;
     this.setState(
       {
-        sliderClassName: null,
-        sliderCoords: `translate(${coords}px, 0)`,
         cur: newCur,
       },
       () => {
@@ -239,37 +267,42 @@ class Slider extends React.Component {
 
   touchStart(event) {
     const touches = event.touches[0];
-    this.startX = touches.pageX;
-    this.startY = touches.pageY;
+    this.dragStartX = touches.pageX;
+    this.dragStartY = touches.pageY;
   }
 
   touchMove(event) {
+    const {
+      cur,
+      viewportWidth,
+    } = this.state;
     const touches = event.touches[0];
-    const deltaY = touches.pageY - this.startY;
-    const deltaX = touches.pageX - this.startX;
+    const deltaY = touches.pageY - this.dragStartY;
+    const deltaX = touches.pageX - this.dragStartX;
     if (Math.abs(deltaY) > 5 && Math.abs(deltaY) > Math.abs(deltaX) / 2) {
-      this.deltaX = 0;
+      this.dragDeltaX = 0;
     } else {
       // disableScroll();
-      this.dir = deltaX < 0 ? 'next' : 'prev';
-      if ((this.dir === 'next' && this.cur < this.tot - 1) || (this.dir === 'prev' && this.cur > 0)) {
-        this.deltaX = deltaX;
-        const coords = deltaX + ((this.state.sizes[0] * this.cur) * -1);
-        this.slider.style.transform = `translate(${coords}px,0)`;
-      }
+      this.dragDirection = deltaX < 0 ? 'next' : 'prev';
+      this.dragDeltaX = deltaX;
+      const coords = deltaX + this.computeCoords(viewportWidth, null, cur);
+      this.slider.classList.add('noTransition');
+      this.slider.style.transform = `translate(${coords}px,0)`;
     }
   }
 
   touchEnd() {
     // enableScroll();
-    if (Math.abs(this.deltaX) > this.state.sizes[0] / 4) {
-      this.handleClick(this.dir);
+    this.slider.style.transform = '';
+    if (Math.abs(this.dragDeltaX) > 100) {
+      this.slide(this.dragDirection);
     } else {
-      this.sliderGoToCoords();
+      this.goToSlide();
     }
-    this.startX = 0;
-    this.startY = 0;
-    this.deltaX = 0;
+    this.dragStartX = 0;
+    this.dragStartY = 0;
+    this.dragDeltaX = 0;
+    this.dragDirection = '';
   }
 
   render() {
@@ -278,16 +311,33 @@ class Slider extends React.Component {
     } = this.props;
     const {
       ready,
+      clonesForLoop,
+      buttonsCoords,
       sliderClassName,
       sliderWidth,
       sliderCoords,
-      clonesForLoop,
-      buttonsCoords,
     } = this.state;
     if (ready) {
       const items = this.createSlides(slides, clonesForLoop);
       return (
-        <div className="slider">
+        <div
+          className="slider"
+          onTouchStart={
+            (e) => {
+              this.touchStart(e);
+            }
+          }
+          onTouchMove={
+            (e) => {
+              this.touchMove(e);
+            }
+          }
+          onTouchEnd={
+            () => {
+              this.touchEnd();
+            }
+          }
+        >
           {
             buttonsCoords
               && (
@@ -305,6 +355,7 @@ class Slider extends React.Component {
               )
           }
           <ul
+            ref={(slider) => { this.slider = slider; }}
             className={sliderClassName}
             style={{ width: sliderWidth, transform: sliderCoords }}
           >
